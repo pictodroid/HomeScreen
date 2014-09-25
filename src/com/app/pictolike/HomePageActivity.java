@@ -1,7 +1,18 @@
 package com.app.pictolike;
 
+import com.app.pictolike.data.Constant;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -30,10 +41,10 @@ public class HomePageActivity extends Fragment {
 	float downYValue;
 	float alphaValue = 0;
 	float imageItemX, imageItemY;
-
+	ImageLoader imageLoader;
 	int windowwidth;
 	int windowheight;
-
+	DisplayImageOptions options;
 	int screenCenter;
 	int x_cord, y_cord;
 	int Likes = 0;
@@ -45,15 +56,48 @@ public class HomePageActivity extends Fragment {
 
 	private RelativeLayout parentView;
 	private ImageView likingStatus;
-
+	Activity activity;
+	
+	public HomePageActivity(Activity activity)
+	{
+		this.activity=activity;
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.activity_homepage, container,
-				false);
+		View rootView = inflater.inflate(R.layout.activity_homepage, container, false);
 
 		setupViews(rootView);
 		return rootView;
+	}
+	
+	
+	void setImageOption()
+	{
+		
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(activity.getApplicationContext())
+			.threadPriority(Thread.NORM_PRIORITY - 2)
+			.denyCacheImageMultipleSizesInMemory()
+			.diskCacheFileNameGenerator(new Md5FileNameGenerator())
+			.diskCacheSize(50 * 1024 * 1024) // 50 Mb
+			.tasksProcessingOrder(QueueProcessingType.LIFO)			
+			.writeDebugLogs() // Remove for release app
+			.build();
+		
+		
+		
+		imageLoader.init(config);
+		
+		options = new DisplayImageOptions.Builder()
+			.showImageForEmptyUri(R.drawable.ic_empty)
+			.resetViewBeforeLoading(true)
+			.cacheOnDisk(true)
+			.imageScaleType(ImageScaleType.EXACTLY)
+			.bitmapConfig(Bitmap.Config.RGB_565)
+			.considerExifParams(true)
+			.displayer(new FadeInBitmapDisplayer(300))
+			.build();
 	}
 
 	public void setupViews(View rootView) {
@@ -70,6 +114,9 @@ public class HomePageActivity extends Fragment {
 		//
 		// ColorDrawable cd = new ColorDrawable(0xFFFBAC00);
 		// bar.setBackgroundDrawable(cd);
+		imageLoader = ImageLoader.getInstance();
+		setImageOption();
+		
 		likingStatus = (ImageView) rootView
 				.findViewById(R.id.imageview_liking_status);
 		parentView = (RelativeLayout) rootView.findViewById(R.id.layoutview);
@@ -86,7 +133,7 @@ public class HomePageActivity extends Fragment {
 				R.drawable.like_pic2, R.drawable.like_pic3,
 				R.drawable.like_pic4 };
 
-		for (int i = 0; i < myImageList.length; i++) {
+		for (int i = 0; i < Constant.homeScreenImageArray.size(); i++) {
 			final RelativeLayout myRelView = new RelativeLayout(getActivity());
 			myRelView.setLayoutParams(new LayoutParams(
 					(windowwidth - (IMAGE_MARGIN * 2)),
@@ -101,8 +148,10 @@ public class HomePageActivity extends Fragment {
 			myRelView.setTag(i);
 
 			ImageView iv = new ImageView(getActivity());
-			iv.setBackgroundResource(myImageList[i]);
-
+			
+			
+			imageLoader.displayImage(Constant.homeScreenImageArray.get(i),iv, options);
+			
 			final int IMAGE_OFFSET = 50;
 
 			iv.setX(IMAGE_OFFSET);
