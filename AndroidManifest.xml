@@ -5,8 +5,8 @@
 
     <uses-sdk
         android:minSdkVersion="15"
-        android:targetSdkVersion="20"
-        android:maxSdkVersion="20" />
+        android:targetSdkVersion="19"
+        android:maxSdkVersion="19" />
 
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

@@ -1,24 +1,11 @@
 package com.app.pictolike;
 
-import com.app.pictolike.data.Constant;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.graphics.Paint.Style;
 import android.graphics.Point;
-import android.graphics.drawable.ShapeDrawable;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,10 +15,21 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.app.pictolike.data.Constant;
+import com.app.pictolike.mysql.ReportStatus;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 public class HomePageActivity extends Fragment {
 	static final int MIN_DISTANCE = 1;
@@ -69,6 +67,7 @@ public class HomePageActivity extends Fragment {
 		View rootView = inflater.inflate(R.layout.activity_homepage, container, false);
 
 		setupViews(rootView);
+		
 		return rootView;
 	}
 	
@@ -101,7 +100,13 @@ public class HomePageActivity extends Fragment {
 	}
 
 	public void setupViews(View rootView) {
-
+		Button btnReportStatus = (Button) rootView.findViewById (R.id.btn_report);
+		btnReportStatus.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ReportStatus.reportStatus(true);
+			}
+		});
 		// super.onCreate(savedInstanceState);
 
 		// setContentView(R.layout.activity_homepage);
@@ -313,6 +318,8 @@ public class HomePageActivity extends Fragment {
 			});
 
 			parentView.addView(myRelView);
+			
+			
 		}
 	}
 

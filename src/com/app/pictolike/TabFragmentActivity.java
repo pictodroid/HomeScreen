@@ -4,16 +4,13 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.hardware.Camera;
 import android.os.Bundle;
-import android.widget.TabHost;
 
 public class TabFragmentActivity extends Activity {
 
 	ActionBar.Tab homeTab; //, settingsTab
 
-	HomePageActivity fragmentHome = new HomePageActivity();
+	HomePageActivity fragmentHome = null;
 	//SettingsScreenActivity fragmentSettings = new SettingsScreenActivity();
 
 
@@ -21,7 +18,8 @@ public class TabFragmentActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
+		fragmentHome = new HomePageActivity(this);
 		ActionBar actionBar = getActionBar();
 		actionBar.setStackedBackgroundDrawable(getResources().getDrawable(
 				R.drawable.top_bar));
